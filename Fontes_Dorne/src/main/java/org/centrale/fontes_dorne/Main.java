@@ -17,7 +17,9 @@ public class Main {
         
         PGMImage image = new PGMImage("C:\\Users\\hdorne\\Desktop\\tp-pgm-fontes_dorne\\Fontes_Dorne\\src\\main\\ressources\\lena.pgm");
                 
-        PGMImage imageBis = image.generateSeuil(127);
-        imageBis.affiche();
+        PGMImage imageSeuil = image.generateSeuil(127);
+        
+        PGMImage imageDiff = image.generateDiff(imageSeuil);
+        imageDiff.affiche();
     }        
 }

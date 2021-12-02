@@ -99,6 +99,20 @@ public class PGMImage {
         }
         return imageSeuil;
     }
+    
+    public PGMImage generateDiff(PGMImage image) throws Exception{
+        if(this.width != image.width || this.height != image.height){
+            throw (new Exception("La taille des deux images ne sont pas identiques !"));
+        } else {
+            PGMImage imageDiff = new PGMImage(this.width, this.height);
+            for(int i = 0; i < this.height; i++){
+                for(int j = 0; j < this.height; j++){
+                    imageDiff.image[i][j] = Math.min(Math.abs(this.image[i][j] - image.image[i][j]), 255);
+                }
+            }
+            return imageDiff;
+        }
+    }
 
     public void affiche() {
         String line;
