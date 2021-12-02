@@ -6,8 +6,12 @@
 package org.centrale.fontes_dorne;
 
 import java.io.BufferedReader;
+import java.io.EOFException;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Scanner;
 
 /**
  *
@@ -16,38 +20,36 @@ import java.io.InputStreamReader;
 public class Main {
     public static void main(String args[]) throws Exception {
         try {
-            InputStream f = ClassLoader.getSystemClassLoader().getResourceAsStream("lena.pgm");
-            BufferedReader d = new BufferedReader(new InputStreamReader(f));
-            String magic = d.readLine();    // first line contains P2 or P5
-            String line = d.readLine();     // second line contains height and width
+            InputStream file = new FileInputStream("C:\\Users\\hdorne\\Desktop\\tp-pgm-fontes_dorne\\Fontes_Dorne\\src\\main\\ressources\\lena.pgm");;
+            BufferedReader buffFile = new BufferedReader(new InputStreamReader(file));
+            
+            String format = buffFile.readLine();    // first line contains P2 or P5
+            String line = buffFile.readLine();     // second line contains height and width
+            
             while (line.startsWith("#")) {
-                line = d.readLine();
+                line = buffFile.readLine();
             }
             Scanner s = new Scanner(line);
             int width = s.nextInt();
             int height = s.nextInt();
-            line = d.readLine();// third line contains maxVal
+            
+            line = buffFile.readLine();// third line contains maxVal
             s = new Scanner(line);
             int maxVal = s.nextInt();
+            
             byte[][] im = new byte[height][width];
 
             int count = 0;
             int b = 0;
             try {
                 while (count < height*width) {
-                    b = d.read() ;
+                    b = buffFile.read() ;
                     if ( b < 0 ) 
                         break ;
-
-                    if (b == '\n') { // do nothing if new line encountered
-                    } 
-//                  else if (b == '#') {
-//                      d.readLine();
-//                  } 
-//                  else if (Character.isWhitespace(b)) { // do nothing if whitespace encountered
-//                  } 
-                    else {
-                        if ( "P5".equals(magic) ) { // Binary format
+                    if (b == '\n') { 
+                        // do nothing if new line encountered
+                    } else {
+                        if ( "P5".equals(format) ) { // Binary format
                             im[count / width][count % width] = (byte)((b >> 8) & 0xFF);
                             count++;
                             im[count / width][count % width] = (byte)(b & 0xFF);
@@ -67,9 +69,8 @@ public class Main {
             System.out.println("Required elements=" + (height * width));
             System.out.println("Obtained elements=" + count);
         }
-        catch(Throwable t) {
+        catch(IOException t) {
             t.printStackTrace(System.err) ;
-            return ;
         }
 
     }
